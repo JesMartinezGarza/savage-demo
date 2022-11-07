@@ -5,10 +5,10 @@ const MongoClient = require('mongodb').MongoClient
 
 var db, collection;
 
-const url = "mongodb+srv://demo:demo@cluster0-q2ojb.mongodb.net/test?retryWrites=true";
-const dbName = "demo";
+const url = "mongodb+srv://axisMundi:ResilientCoders12%21%3F%21%3F@cluster0.xumwt9o.mongodb.net/?retryWrites=true&w=majority";
+const dbName = "Savage";
 
-app.listen(3000, () => {
+app.listen(2121, () => {
     MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, (error, client) => {
         if(error) {
             throw error;
@@ -31,7 +31,9 @@ app.get('/', (req, res) => {
 })
 
 app.post('/messages', (req, res) => {
-  db.collection('messages').insertOne({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0}, (err, result) => {
+  console.log(req)
+  console.log(req.body)
+  db.collection('messages').insertOne({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0, unicorn: req.body.favColor}, (err, result) => {
     if (err) return console.log(err)
     console.log('saved to database')
     res.redirect('/')
