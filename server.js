@@ -5,8 +5,8 @@ const MongoClient = require('mongodb').MongoClient
 
 var db, collection;
 
-const url = "mongodb+srv://axisMundi:demodemodemo@cluster0.xumwt9o.mongodb.net/?retryWrites=true&w=majority";
-const dbName = "Savage";
+const url = "mongodb+srv://axisMundi:mFGpPJbo76y9rtB5@cluster0.xumwt9o.mongodb.net/Authenticate?retryWrites=true&w=majority";
+const dbName = "demo";
 
 app.listen(2121, () => {
     MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, (error, client) => {
@@ -33,7 +33,7 @@ app.get('/', (req, res) => {
 app.post('/messages', (req, res) => {
   console.log(req)
   console.log(req.body)
-  db.collection('messages').insertOne({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0, unicorn: req.body.favColor}, (err, result) => {
+  db.collection('messages').insertOne({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0, thumbTotal:0, unicorn: req.body.favColor}, (err, result) => {
     if (err) return console.log(err)
     console.log('saved to database')
     res.redirect('/')
@@ -44,7 +44,9 @@ app.put('/messages', (req, res) => {
   db.collection('messages')
   .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
     $set: {
-      thumbUp:req.body.thumbUp + 1
+      thumbUp:req.body.thumbUp,
+      thumbDown:req.body.thumbDown,
+      thumbTotal:req.body.thumbTotal
     }
   }, {
     sort: {_id: -1},
@@ -54,6 +56,22 @@ app.put('/messages', (req, res) => {
     res.send(result)
   })
 })
+
+app.put('/messages', (req, res) => {
+  db.collection('messages')
+  .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
+    $set: {
+      thumbDown:req.body.thumbTotal
+    }
+  }, {
+    sort: {_id: -1},
+    upsert: true
+  }, (err, result) => {
+    if (err) return res.send(err)
+    res.send(result)
+  })
+})
+
 
 app.delete('/messages', (req, res) => {
   db.collection('messages').findOneAndDelete({name: req.body.name, msg: req.body.msg}, (err, result) => {
