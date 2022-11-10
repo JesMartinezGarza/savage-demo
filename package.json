@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "savage": "nodemon server.js",
-    "dev" : "nodemon server.js"
+    "dev": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +16,7 @@
     "bson": ">=1.0.5",
     "ejs": "^3.1.8",
     "express": "^4.13.3",
+    "figlet": "^1.5.2",
     "mongodb": "^3.3.4"
   },
   "devDependencies": {
