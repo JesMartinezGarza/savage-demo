@@ -1,23 +1,19 @@
-var thumbUp = document.getElementsByClassName("fa-thumbs-up");
-var thumbDown = document.getElementsByClassName("fa-thumbs-down");
+var like = document.getElementsByClassName("fa-thumbs-up");
+var dislike = document.getElementsByClassName("fa-thumbs-down");
 var trash = document.getElementsByClassName("fa-trash");
 
-Array.from(thumbUp).forEach(function(element) {
+Array.from(like).forEach(function(element) {
       element.addEventListener('click', function(){
         const name = this.parentNode.parentNode.childNodes[1].innerText
         const msg = this.parentNode.parentNode.childNodes[3].innerText
-        const thumbUp = parseFloat(this.parentNode.parentNode.childNodes[5].innerText)
-        const thumbDown = parseFloat(this.parentNode.parentNode.childNodes[7].innerText)
-        const thumbTotal = parseFloat(this.parentNode.parentNode.childNodes[9].innerText)
-        fetch('messages', {
+        const likeScore = parseFloat(this.parentNode.parentNode.childNodes[5].innerText)
+        fetch('like', {
           method: 'put',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({
             'name': name,
             'msg': msg,
-            'thumbUp':thumbUp + 1,
-            'thumbDown':thumbDown,
-            'thumbTotal':thumbTotal + 1
+            'likeScore':likeScore
           })
         })
         .then(response => {
@@ -30,22 +26,18 @@ Array.from(thumbUp).forEach(function(element) {
       });
 });
 
-Array.from(thumbDown).forEach(function(element) {
+Array.from(dislike).forEach(function(element) {
   element.addEventListener('click', function(){
     const name = this.parentNode.parentNode.childNodes[1].innerText
     const msg = this.parentNode.parentNode.childNodes[3].innerText
-    const thumbUp = parseFloat(this.parentNode.parentNode.childNodes[5].innerText)
-    const thumbDown = parseFloat(this.parentNode.parentNode.childNodes[7].innerText)
-    const thumbTotal = parseFloat(this.parentNode.parentNode.childNodes[9].innerText)
-    fetch('messages', {
+    const likeScore = parseFloat(this.parentNode.parentNode.childNodes[5].innerText)
+    fetch('dislike', {
       method: 'put',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         'name': name,
         'msg': msg,
-        'thumbUp':thumbUp - 1,
-        'thumbDown': thumbDown + 1,
-        'thumbTotal': thumbTotal + 1
+        'likeScore': likeScore
 
       })
     })
@@ -63,7 +55,7 @@ Array.from(trash).forEach(function(element) {
       element.addEventListener('click', function(){
         const name = this.parentNode.parentNode.childNodes[1].innerText
         const msg = this.parentNode.parentNode.childNodes[3].innerText
-        fetch('messages', {
+        fetch('delete', {
           method: 'delete',
           headers: {
             'Content-Type': 'application/json'

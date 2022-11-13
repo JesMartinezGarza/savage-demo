@@ -14,14 +14,14 @@ app.listen(2121, () => {
             throw error;
         }
         db = client.db(dbName);
-        console.log("Connected to `" + dbName + "`!");
+        console.log("Connected to collection `" + dbName + "`!");
     });
 });
 
 app.set('view engine', 'ejs')
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
 app.use(express.static('public'))
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
 app.get('/', (req, res) => {
   db.collection('messages').find().toArray((err, result) => {
@@ -31,22 +31,21 @@ app.get('/', (req, res) => {
 })
 
 app.post('/messages', (req, res) => {
-  console.log(req)
   console.log(req.body)
-  db.collection('messages').insertOne({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0, thumbTotal:0, unicorn: req.body.favColor}, (err, result) => {
+  db.collection('messages').insertOne({name: req.body.name, msg: req.body.msg, like: 0, dislike:0, likeScore:0, unicorn: req.body.adLib}, (err, result) => {
     if (err) return console.log(err)
     console.log('saved to database')
     res.redirect('/')
   })
 })
 
-app.put('/messages', (req, res) => {
-  db.collection('messages')
-  .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
+app.put('/like', (req, res) => {
+  console.log(`${req.body.name}, you received a like!`)
+  console.log(`You had ${req.body.likeScore} likes, and now you have ${req.body.likeScore + 1} likes!`)
+  db.collection('messages').findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
     $set: {
-      thumbUp:req.body.thumbUp,
-      thumbDown:req.body.thumbDown,
-      thumbTotal:req.body.thumbTotal
+      like: req.body.likeScore + 1,
+      likeScore: req.body.likeScore + 1
     }
   }, {
     sort: {_id: -1},
@@ -57,11 +56,14 @@ app.put('/messages', (req, res) => {
   })
 })
 
-app.put('/messages', (req, res) => {
-  db.collection('messages')
-  .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
+app.put('/dislike', (req, res) => {
+  console.log(`Ignore the haters, ${req.body.name}!`)
+  console.log(`You had ${req.body.likeScore} likes, but now you have ${req.body.likeScore - 1} likes.`)
+
+  db.collection('messages').findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
     $set: {
-      thumbDown:req.body.thumbTotal
+      dislike: 0 - req.body.likeScore,
+      likeScore: req.body.likeScore - 1
     }
   }, {
     sort: {_id: -1},
@@ -73,7 +75,8 @@ app.put('/messages', (req, res) => {
 })
 
 
-app.delete('/messages', (req, res) => {
+app.delete('/delete', (req, res) => {
+  console.log(`Goodbye, ${req.body.name}!`)
   db.collection('messages').findOneAndDelete({name: req.body.name, msg: req.body.msg}, (err, result) => {
     if (err) return res.send(500, err)
     res.send('Message deleted!')

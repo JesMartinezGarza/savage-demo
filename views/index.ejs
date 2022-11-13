@@ -18,9 +18,7 @@
     <li class="message">
       <span><%= messages[i].name %></span>
       <span><%= messages[i].msg %></span>
-      <span><%= messages[i].thumbUp %></span>
-      <!-- <span><%= messages[i].thumbDown %></span>
-      <span><%= messages[i].thumbTotal %></span> -->
+      <span><%= messages[i].likeScore %></span>
       <span><%= messages[i].unicorn %></span>
       <span><i class="fa fa-thumbs-up" aria-hidden="true"></i></span>
       <span><i class="fa fa-thumbs-down" aria-hidden="true"></i></span>
@@ -32,9 +30,9 @@
   <h2>Add a message</h2>
 
   <form action="/messages" method="POST">
-    <input type="text" placeholder="name" name="name">
-    <input type="text" placeholder="message" name="msg">
-    <input type="text" placeholder="message" name="favColor">
+    <input type="text" placeholder="Stage Name" name="name">
+    <input type="text" placeholder="Birth Name" name="msg">
+    <input type="text" placeholder="Message" name="adLib">
     <button type="submit">Submit</button>
   </form>
 
